@@ -22,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body className={cn(fontSans.variable)}>
+      <body className={cn('flex h-screen flex-col', fontSans.variable)}>
         <Header />
         {children}
       </body>
