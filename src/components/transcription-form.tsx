@@ -116,7 +116,8 @@ export const TranscriptionForm = () => {
     <form className="space-y-4">
       <label
         htmlFor="file"
-        className="border flex rounded-md aspect-video cursor-pointer border-dashed text-sm flex-col gap-2 items-center justify-center text-muted-foreground duration-300 hover:bg-primary/5"
+        className="border flex rounded-md aspect-video cursor-pointer border-dashed text-sm flex-col gap-2 items-center justify-center text-muted-foreground duration-300 hover:bg-primary/5 data-[disabled=true]:hover:bg-transparent data-[disabled=true]:cursor-not-allowed"
+        data-disabled={status !== 'waiting'}
         title="Selecionar arquivo de video ou áudio"
       >
         {previewUrl ? (
@@ -127,8 +128,9 @@ export const TranscriptionForm = () => {
               className="pointer-events-none rounded-md aspect-video object-cover"
             />
             <button 
-              className="absolute right-0 top-0 transition-all mr-2 mt-2 p-0.5 bg-secondary rounded-full text-foreground hover:bg-primary"
+              className="absolute right-0 top-0 transition-all mr-2 mt-2 p-0.5 bg-secondary rounded-full text-foreground hover:bg-primary disabled:pointer-events-none"
               title="Remover arquivo"
+              disabled={status !== 'waiting'}
               onClick={(e) => {
                   e.preventDefault(); 
                   setFile(undefined)
@@ -142,8 +144,9 @@ export const TranscriptionForm = () => {
           <div className="relative flex flex-1 w-full items-center justify-center">
             <Music className="w-8 h-8" />
             <button 
-              className="absolute right-0 top-0 transition-all mr-2 mt-2 p-0.5 bg-secondary rounded-full text-foreground hover:bg-primary"
+              className="absolute right-0 top-0 transition-all mr-2 mt-2 p-0.5 bg-secondary rounded-full text-foreground hover:bg-primary disabled:pointer-events-none"
               title="Remover arquivo"
+              disabled={status !== 'waiting'}
               onClick={(e) => {
                   e.preventDefault(); 
                   setFile(undefined)
@@ -209,6 +212,7 @@ export const TranscriptionForm = () => {
           <span>Temperatura</span>
           
           <Slider
+            disabled={status !== 'waiting'}
             name="temperature"
             min={0}
             max={1}
