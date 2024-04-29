@@ -1,8 +1,9 @@
-import { Header } from "@/components/header";
-import { cn } from "@/lib/utils";
+import { TranscriptionProvider } from "@/contexts/transcription";
+import { cn } from "@/libs/utils";
 import type { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google";
 import { ReactNode } from "react";
+import { Toaster } from "sonner";
 import "./globals.css";
 
 const fontSans = FontSans({
@@ -22,10 +23,22 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body className={cn('flex h-screen flex-col', fontSans.variable)}>
-        <Header />
-        {children}
-      </body>
+      <TranscriptionProvider>
+        <body className={cn(fontSans.variable)}>
+          <Toaster
+            richColors
+            expand
+            closeButton
+            theme="dark"
+            toastOptions={{
+              style: {
+                willChange: 'unset',
+              },
+            }}
+          />
+          {children}
+        </body>
+      </TranscriptionProvider>
     </html>
   );
 }
