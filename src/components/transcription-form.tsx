@@ -114,66 +114,68 @@ export const TranscriptionForm = () => {
 
   return (
     <form className="space-y-4">
-      <label
-        htmlFor="file"
-        className="border flex rounded-md aspect-video cursor-pointer border-dashed text-sm flex-col gap-2 items-center justify-center text-muted-foreground duration-300 hover:bg-primary/5 data-[disabled=true]:hover:bg-transparent data-[disabled=true]:cursor-not-allowed"
-        data-disabled={status !== 'waiting'}
-        title="Selecionar arquivo de video ou áudio"
-      >
-        {previewUrl ? (
-          <div className="relative flex-1 w-full">
-            <video
-              src={previewUrl}
-              controls={false}
-              className="pointer-events-none rounded-md aspect-video object-cover"
-            />
-            <button 
-              className="absolute right-0 top-0 transition-all mr-2 mt-2 p-0.5 bg-secondary rounded-full text-foreground hover:bg-primary disabled:pointer-events-none"
-              title="Remover arquivo"
-              disabled={status !== 'waiting'}
-              onClick={(e) => {
-                  e.preventDefault(); 
-                  setFile(undefined)
-                }
-              }
-            >
-              <X className="size-5" />
-            </button>
-          </div>
-        ) : file?.type === 'audio/mpeg' ? (
-          <div className="relative flex flex-1 w-full items-center justify-center">
-            <Music className="w-8 h-8" />
-            <button 
-              className="absolute right-0 top-0 transition-all mr-2 mt-2 p-0.5 bg-secondary rounded-full text-foreground hover:bg-primary disabled:pointer-events-none"
-              title="Remover arquivo"
-              disabled={status !== 'waiting'}
-              onClick={(e) => {
-                  e.preventDefault(); 
-                  setFile(undefined)
-                }
-              }
-            >
-              <X className="size-5" />
-            </button>
-          </div>
-        ) : (
-          <>
-            <Upload className="w-8 h-8" />
-            <span className="text-center w-52">Selecione um arquivo de video ou áudio</span>
-            <span className="text-xs italic text-slate-700">Tipos de arquivos suportados: .mp4, .mkv, .mp3</span>
-          </>
-        )}
-      </label>
+      <div>
+        <input
+          type="file"
+          name="file"
+          id="file"
+          accept=".mp4,.mp3,.mkv"
+          className="sr-only peer"
+          onChange={handleFileSelected}
+          disabled={status != 'waiting'}
+        />
 
-      <input
-        type="file"
-        name="file"
-        id="file"
-        accept=".mp4,.mp3,.mkv"
-        className="sr-only"
-        onChange={handleFileSelected}
-        disabled={status != 'waiting'}
-      />
+        <label
+          htmlFor="file"
+          className="border flex rounded-md aspect-video cursor-pointer border-dashed text-sm flex-col gap-2 items-center justify-center text-muted-foreground duration-300 hover:bg-primary/5 data-[disabled=true]:hover:bg-transparent data-[disabled=true]:cursor-not-allowed peer-focus:ring-primary peer-focus:transition-none peer-focus:ring-1"
+          data-disabled={status !== 'waiting'}
+          title="Selecionar arquivo de video ou áudio"
+        >
+          {previewUrl ? (
+            <div className="relative flex-1 w-full">
+              <video
+                src={previewUrl}
+                controls={false}
+                className="pointer-events-none rounded-md aspect-video object-cover"
+              />
+              <button 
+                className="absolute right-0 top-0 transition-all mr-2 mt-2 p-0.5 bg-secondary rounded-full text-foreground hover:bg-primary disabled:pointer-events-none outline-none focus-visible:ring-primary focus-visible:ring-1"
+                title="Remover arquivo"
+                disabled={status !== 'waiting'}
+                onClick={(e) => {
+                    e.preventDefault(); 
+                    setFile(undefined)
+                  }
+                }
+              >
+                <X className="size-5" />
+              </button>
+            </div>
+          ) : file?.type === 'audio/mpeg' ? (
+            <div className="relative flex flex-1 w-full items-center justify-center">
+              <Music className="w-8 h-8" />
+              <button 
+                className="absolute right-0 top-0 transition-all mr-2 mt-2 p-0.5 bg-secondary rounded-full text-foreground hover:bg-primary disabled:pointer-events-none outline-none focus-visible:ring-primary focus-visible:ring-1"
+                title="Remover arquivo"
+                disabled={status !== 'waiting'}
+                onClick={(e) => {
+                    e.preventDefault(); 
+                    setFile(undefined)
+                  }
+                }
+              >
+                <X className="size-5" />
+              </button>
+            </div>
+          ) : (
+            <>
+              <Upload className="w-8 h-8" />
+              <span className="text-center w-52">Selecione um arquivo de video ou áudio</span>
+              <span className="text-xs italic text-slate-700">Tipos de arquivos suportados: .mp4, .mkv, .mp3</span>
+            </>
+          )}
+        </label>
+      </div>
 
       <Separator />
 
@@ -239,7 +241,7 @@ export const TranscriptionForm = () => {
         data-error={status === 'error'}
         disabled={status !== 'waiting'}
         className={
-          'w-full data-[success=true]:bg-green-600 data-[error=true]:bg-red-600 disabled:pointer-events-none disabled:bg-primary/90'
+          'w-full data-[success=true]:bg-green-600 data-[error=true]:bg-red-600 disabled:pointer-events-none disabled:bg-primary/90 focus-visible:ring-foreground'
         }
       >
         {status === 'waiting' ? (

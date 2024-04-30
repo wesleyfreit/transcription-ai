@@ -13,7 +13,7 @@ export const Main = () => {
         id="transcription"
         placeholder="Transcrição gerada pela AI..."
         readOnly={!transcription}
-        className="flex flex-col flex-1 gap-4 resize-none p-5 leading-relaxed"
+        className="flex flex-col flex-1 gap-4 resize-none p-5 leading-relaxed tracking-wider text-base antialiased"
         onChange={(e) => setTranscription(e.target.value)}
         value={transcription}
       />
