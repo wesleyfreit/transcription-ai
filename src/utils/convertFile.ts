@@ -4,7 +4,14 @@ import { fetchFile } from '@ffmpeg/util';
 export const convertFile = async (file: File) => {
   const ffmpeg = await getFFmpeg();
 
-  const filename = file.type === 'audio/mpeg' ? 'input.mp3' : file.type === 'video/mp4' ? 'input.mp4' : file.type === 'video/mkv' ? 'input.mkv' : false;
+  const filename =
+    file.type === 'audio/mpeg'
+      ? 'input.mp3'
+      : file.type === 'video/mp4'
+        ? 'input.mp4'
+        : file.type === 'video/mkv'
+          ? 'input.mkv'
+          : false;
 
   if (!filename) {
     throw new Error('Formato de arquivo não suportado.');

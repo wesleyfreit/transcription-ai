@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
-import { transcribe } from "@/actions/transcribe";
-import { convertFile } from "@/utils/convertFile";
-import { CheckCircle, Music, Upload, Wand2, X, XCircle } from "lucide-react";
-import { ChangeEvent, MouseEvent, useMemo, useRef, useState } from "react";
-import { Button } from "./ui/button";
-import { Label } from "./ui/label";
-import { Select, SelectTrigger, SelectValue } from "./ui/select";
-import { Separator } from "./ui/separator";
-import { Slider } from "./ui/slider";
-import { Spinner } from "./ui/spinner";
-import { Textarea } from "./ui/textarea";
-import { useTranscription } from "@/hooks/use-transcription";
-import { toast } from "sonner";
+import { transcribe } from '@/actions/transcribe';
+import { convertFile } from '@/utils/convertFile';
+import { CheckCircle, Music, Upload, Wand2, X, XCircle } from 'lucide-react';
+import { ChangeEvent, MouseEvent, useMemo, useRef, useState } from 'react';
+import { Button } from './ui/button';
+import { Label } from './ui/label';
+import { Select, SelectTrigger, SelectValue } from './ui/select';
+import { Separator } from './ui/separator';
+import { Slider } from './ui/slider';
+import { Spinner } from './ui/spinner';
+import { Textarea } from './ui/textarea';
+import { useTranscription } from '@/hooks/use-transcription';
+import { toast } from 'sonner';
 
 type IStatus = 'waiting' | 'converting' | 'generating' | 'success' | 'error';
 
@@ -30,7 +30,7 @@ export const TranscriptionForm = () => {
   const [status, setStatus] = useState<IStatus>('waiting');
 
   const { setTranscription } = useTranscription();
-  
+
   const promptInputRef = useRef<HTMLTextAreaElement>(null);
 
   const previewUrl = useMemo(() => {
@@ -75,17 +75,17 @@ export const TranscriptionForm = () => {
 
       return;
     }
-    
+
     try {
       setTranscription('');
 
       setStatus('converting');
-      
+
       const audioFile = await convertFile(file);
-      
+
       setStatus('generating');
 
-      const formData = new FormData();  
+      const formData = new FormData();
 
       formData.set('file', audioFile);
       formData.append('prompt', prompt);
@@ -93,7 +93,7 @@ export const TranscriptionForm = () => {
 
       const transcription = await transcribe(formData);
 
-      if(transcription) {
+      if (transcription) {
         setTranscription(transcription.text);
 
         setFile(undefined);
@@ -120,58 +120,60 @@ export const TranscriptionForm = () => {
           name="file"
           id="file"
           accept=".mp4,.mp3,.mkv"
-          className="sr-only peer"
+          className="peer sr-only"
           onChange={handleFileSelected}
           disabled={status != 'waiting'}
         />
 
         <label
           htmlFor="file"
-          className="border flex rounded-md aspect-video cursor-pointer border-dashed text-sm flex-col gap-2 items-center justify-center text-muted-foreground duration-300 hover:bg-primary/5 data-[disabled=true]:hover:bg-transparent data-[disabled=true]:cursor-not-allowed peer-focus:ring-primary peer-focus:transition-none peer-focus:ring-1"
+          className="flex aspect-video cursor-pointer flex-col items-center justify-center gap-2 rounded-md border border-dashed text-sm text-muted-foreground duration-300 hover:bg-primary/5 peer-focus:ring-1 peer-focus:ring-primary peer-focus:transition-none data-[disabled=true]:cursor-not-allowed data-[disabled=true]:hover:bg-transparent"
           data-disabled={status !== 'waiting'}
           title="Selecionar arquivo de video ou áudio"
         >
           {previewUrl ? (
-            <div className="relative flex-1 w-full">
+            <div className="relative w-full flex-1">
               <video
                 src={previewUrl}
                 controls={false}
-                className="pointer-events-none rounded-md aspect-video object-cover"
+                className="pointer-events-none aspect-video rounded-md object-cover"
               />
-              <button 
-                className="absolute right-0 top-0 transition-all mr-2 mt-2 p-0.5 bg-secondary rounded-full text-foreground hover:bg-primary disabled:pointer-events-none outline-none focus-visible:ring-primary focus-visible:ring-1"
+              <button
+                className="absolute right-0 top-0 mr-2 mt-2 rounded-full bg-secondary p-0.5 text-foreground outline-none transition-all hover:bg-primary focus-visible:ring-1 focus-visible:ring-primary disabled:pointer-events-none"
                 title="Remover arquivo"
                 disabled={status !== 'waiting'}
                 onClick={(e) => {
-                    e.preventDefault(); 
-                    setFile(undefined)
-                  }
-                }
+                  e.preventDefault();
+                  setFile(undefined);
+                }}
               >
                 <X className="size-5" />
               </button>
             </div>
           ) : file?.type === 'audio/mpeg' ? (
-            <div className="relative flex flex-1 w-full items-center justify-center">
-              <Music className="w-8 h-8" />
-              <button 
-                className="absolute right-0 top-0 transition-all mr-2 mt-2 p-0.5 bg-secondary rounded-full text-foreground hover:bg-primary disabled:pointer-events-none outline-none focus-visible:ring-primary focus-visible:ring-1"
+            <div className="relative flex w-full flex-1 items-center justify-center">
+              <Music className="size-8" />
+              <button
+                className="absolute right-0 top-0 mr-2 mt-2 rounded-full bg-secondary p-0.5 text-foreground outline-none transition-all hover:bg-primary focus-visible:ring-1 focus-visible:ring-primary disabled:pointer-events-none"
                 title="Remover arquivo"
                 disabled={status !== 'waiting'}
                 onClick={(e) => {
-                    e.preventDefault(); 
-                    setFile(undefined)
-                  }
-                }
+                  e.preventDefault();
+                  setFile(undefined);
+                }}
               >
                 <X className="size-5" />
               </button>
             </div>
           ) : (
             <>
-              <Upload className="w-8 h-8" />
-              <span className="text-center w-52">Selecione um arquivo de video ou áudio</span>
-              <span className="text-xs italic text-slate-700">Tipos de arquivos suportados: .mp4, .mkv, .mp3</span>
+              <Upload className="size-8" />
+              <span className="w-52 text-center">
+                Selecione um arquivo de video ou áudio
+              </span>
+              <span className="text-xs italic text-slate-700">
+                Tipos de arquivos suportados: .mp4, .mkv, .mp3
+              </span>
             </>
           )}
         </label>
@@ -185,7 +187,7 @@ export const TranscriptionForm = () => {
         <Textarea
           ref={promptInputRef}
           id="prompt"
-          className="h-20 leading-relaxed resize-none"
+          className="h-20 resize-none leading-relaxed"
           placeholder="Inclua palavras chave mencionadas no vídeo separadas por vírgula (,)"
           disabled={status !== 'waiting'}
         />
@@ -194,17 +196,13 @@ export const TranscriptionForm = () => {
       <div className="space-y-2">
         <Label htmlFor="model">Modelo</Label>
 
-        <Select
-        name="model-select"
-        defaultValue="whispper-1"
-        disabled
-      >
-        <SelectTrigger id="model">
-          <SelectValue>Whisper-1</SelectValue>
-        </SelectTrigger>
-      </Select>
+        <Select name="model-select" defaultValue="whispper-1" disabled>
+          <SelectTrigger id="model">
+            <SelectValue>Whisper-1</SelectValue>
+          </SelectTrigger>
+        </Select>
 
-        <span className="block italic text-xs text-slate-700">
+        <span className="block text-xs italic text-slate-700">
           Modelo de transcrição de áudio padrão.
         </span>
       </div>
@@ -212,7 +210,7 @@ export const TranscriptionForm = () => {
       <div className="space-y-4">
         <Label className="space-y-4">
           <span>Temperatura</span>
-          
+
           <Slider
             disabled={status !== 'waiting'}
             name="temperature"
@@ -220,13 +218,15 @@ export const TranscriptionForm = () => {
             max={1}
             step={0.1}
             value={[temperature]}
-            onValueChange={(value) => setTemperature(value[0] !== undefined ? value[0] : temperature)}
+            onValueChange={(value) =>
+              setTemperature(value[0] !== undefined ? value[0] : temperature)
+            }
           >
             <Slider />
           </Slider>
         </Label>
 
-        <span className="block italic text-xs text-slate-700 leading-relaxed">
+        <span className="block text-xs italic leading-relaxed text-slate-700">
           Valores mais elevados tender a deixar o resultado mais criativo, mas também mais
           propenso a erros.
         </span>
@@ -241,23 +241,23 @@ export const TranscriptionForm = () => {
         data-error={status === 'error'}
         disabled={status !== 'waiting'}
         className={
-          'w-full data-[success=true]:bg-green-600 data-[error=true]:bg-red-600 disabled:pointer-events-none disabled:bg-primary/90 focus-visible:ring-foreground'
+          'w-full focus-visible:ring-foreground disabled:pointer-events-none disabled:bg-primary/90 data-[error=true]:bg-red-600 data-[success=true]:bg-green-600'
         }
       >
         {status === 'waiting' ? (
           <>
             {formStatusMessages.waiting}
-            <Wand2 className="w-4 h-4 ml-2" />
+            <Wand2 className="ml-2 size-4" />
           </>
         ) : status === 'success' ? (
           <>
             {formStatusMessages.success}
-            <CheckCircle className="w-4 h-4 ml-2" />
+            <CheckCircle className="ml-2 size-4" />
           </>
         ) : status === 'error' ? (
           <>
             {formStatusMessages.error}
-            <XCircle className="w-4 h-4 ml-2" />
+            <XCircle className="ml-2 size-4" />
           </>
         ) : (
           <>
@@ -268,4 +268,4 @@ export const TranscriptionForm = () => {
       </Button>
     </form>
   );
-}
+};

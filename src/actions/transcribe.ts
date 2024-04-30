@@ -13,7 +13,7 @@ const transcriptionSchema = zfd.formData({
 
 export const transcribe = async (formData: FormData) => {
   const { file, prompt, temperature } = transcriptionSchema.parse(formData);
-  
+
   return await openai.audio.transcriptions.create({
     file: file,
     model: 'whisper-1',
@@ -22,4 +22,4 @@ export const transcribe = async (formData: FormData) => {
     temperature,
     prompt,
   });
-}
+};

@@ -7,7 +7,9 @@ export interface TranscriptionContextProps {
   setTranscription: (user: string) => void;
 }
 
-export const TranscriptionContext = createContext<TranscriptionContextProps>({} as TranscriptionContextProps);
+export const TranscriptionContext = createContext<TranscriptionContextProps>(
+  {} as TranscriptionContextProps,
+);
 
 export const TranscriptionProvider = ({ children }: { children: ReactNode }) => {
   const [transcription, setTranscription] = useState<string | undefined>();
