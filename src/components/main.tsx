@@ -11,7 +11,7 @@ export const Main = () => {
 
   return (
     <main
-      className="flex size-full flex-col gap-4 p-5 sm:flex-row sm:gap-0"
+      className="flex size-full flex-col gap-4 p-5 sm:flex-row"
       onDragOver={(e) => e.preventDefault()}
       onDrop={(e) => e.preventDefault()}
     >
@@ -20,7 +20,7 @@ export const Main = () => {
           id="transcription"
           placeholder="Transcrição gerada pela AI..."
           readOnly={isLoading}
-          className="flex h-96 flex-1 resize-none p-5 text-base leading-relaxed tracking-wider antialiased sm:h-full sm:rounded-r-none"
+          className="flex h-96 flex-1 resize-none p-5 text-base leading-relaxed tracking-wider antialiased sm:h-full"
           onChange={(e) => setTranscription(e.target.value)}
           value={
             recognition && !transcription
@@ -35,7 +35,7 @@ export const Main = () => {
 
       <Separator className="sm:hidden" />
 
-      <aside className="w-full rounded-md sm:w-80 sm:min-w-80 sm:rounded-l-none sm:border sm:border-l-0 sm:p-5">
+      <aside className="w-full sm:max-w-96">
         <TranscriptionForm />
       </aside>
     </main>
