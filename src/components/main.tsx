@@ -8,7 +8,11 @@ export const Main = () => {
   const { transcription, setTranscription } = useTranscription();
 
   return (
-    <main className="flex size-full gap-6 p-5">
+    <main
+      className="flex size-full gap-6 p-5"
+      onDragOver={(e) => e.preventDefault()}
+      onDrop={(e) => e.preventDefault()}
+    >
       <Textarea
         id="transcription"
         placeholder="Transcrição gerada pela AI..."

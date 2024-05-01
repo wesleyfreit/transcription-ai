@@ -1,3 +1,5 @@
+'use client';
+
 import { Linkedin } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -5,7 +7,11 @@ import Link from 'next/link';
 
 export const Header = () => {
   return (
-    <header className="flex items-center justify-between border-b px-6 py-3">
+    <header
+      className="flex items-center justify-between border-b px-6 py-3"
+      onDragOver={(e) => e.preventDefault()}
+      onDrop={(e) => e.preventDefault()}
+    >
       <h1 className="text-xl font-bold">TranscriptionAi</h1>
       <Button
         variant="ghost"

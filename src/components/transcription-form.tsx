@@ -1,9 +1,11 @@
 'use client';
 
 import { transcribe } from '@/actions/transcribe';
+import { useTranscription } from '@/hooks/use-transcription';
 import { convertFile } from '@/utils/convertFile';
 import { CheckCircle, Music, Upload, Wand2, X, XCircle } from 'lucide-react';
-import { ChangeEvent, MouseEvent, useMemo, useRef, useState } from 'react';
+import { ChangeEvent, DragEvent, MouseEvent, useMemo, useRef, useState } from 'react';
+import { toast } from 'sonner';
 import { Button } from './ui/button';
 import { Label } from './ui/label';
 import { Select, SelectTrigger, SelectValue } from './ui/select';
@@ -11,8 +13,6 @@ import { Separator } from './ui/separator';
 import { Slider } from './ui/slider';
 import { Spinner } from './ui/spinner';
 import { Textarea } from './ui/textarea';
-import { useTranscription } from '@/hooks/use-transcription';
-import { toast } from 'sonner';
 
 type IStatus = 'waiting' | 'converting' | 'generating' | 'success' | 'error';
 
@@ -44,6 +44,31 @@ export const TranscriptionForm = () => {
 
     return URL.createObjectURL(file);
   }, [file]);
+
+  const handleDragOverFile = (event: DragEvent<HTMLLabelElement>) => {
+    event.preventDefault();
+  };
+
+  const handleDropFile = (event: DragEvent<HTMLLabelElement>) => {
+    event.preventDefault();
+
+    const { files } = event.dataTransfer;
+
+    if (!files?.length) {
+      setFile(file);
+      return;
+    }
+
+    if (files[0].type !== 'audio/mpeg' && !files[0].type.includes('video')) {
+      toast.error('Tipo de arquivo não suportado.');
+      return;
+    }
+
+    const selectedFile = files[0];
+    setFile(selectedFile);
+
+    event.dataTransfer.clearData();
+  };
 
   const handleFileSelected = (event: ChangeEvent<HTMLInputElement>) => {
     const { files } = event.currentTarget;
@@ -127,9 +152,11 @@ export const TranscriptionForm = () => {
 
         <label
           htmlFor="file"
-          className="flex aspect-video cursor-pointer flex-col items-center justify-center gap-2 rounded-md border border-dashed text-sm text-muted-foreground duration-300 hover:bg-primary/5 peer-focus:ring-1 peer-focus:ring-primary peer-focus:transition-none data-[disabled=true]:cursor-not-allowed data-[disabled=true]:hover:bg-transparent"
+          className="flex aspect-video cursor-pointer flex-col items-center justify-center gap-2 rounded-md border border-dashed text-sm text-muted-foreground duration-300 hover:bg-primary/5 peer-focus:ring-1 peer-focus:ring-primary peer-focus:transition-none data-[disabled=true]:cursor-not-allowed data-[disabled=true]:hover:bg-transparent "
           data-disabled={status !== 'waiting'}
-          title="Selecionar arquivo de video ou áudio"
+          title="Selecione ou arraste e solte um arquivo"
+          onDragOver={handleDragOverFile}
+          onDrop={handleDropFile}
         >
           {previewUrl ? (
             <div className="relative w-full flex-1">
@@ -169,7 +196,7 @@ export const TranscriptionForm = () => {
             <>
               <Upload className="size-8" />
               <span className="w-52 text-center">
-                Selecione um arquivo de video ou áudio
+                Selecione ou arraste e solte um arquivo
               </span>
               <span className="text-xs italic text-slate-700">
                 Tipos de arquivos suportados: .mp4, .mkv, .mp3
