@@ -36,6 +36,12 @@ export const SpeechTranscrition = () => {
 
     let recognition = '';
 
+    const isAndroid = /Android/i.test(navigator.userAgent);
+
+    if (isAndroid) {
+      speechRecognition.continuous = false;
+    }
+
     speechRecognition.onresult = (event) => {
       recognition = Array.from(event.results).reduce((text, result) => {
         return text.concat(result[0]?.transcript || '');
