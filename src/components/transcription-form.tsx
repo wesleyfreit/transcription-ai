@@ -140,7 +140,7 @@ export const TranscriptionForm = () => {
   };
 
   return (
-    <form className="space-y-4">
+    <form className="mb-5 space-y-4">
       <div>
         <input
           type="file"
@@ -154,7 +154,7 @@ export const TranscriptionForm = () => {
 
         <label
           htmlFor="file"
-          className="flex aspect-video cursor-pointer flex-col items-center justify-center gap-2 rounded-md border border-dashed text-sm text-muted-foreground duration-300 hover:bg-primary/5 peer-focus:ring-1 peer-focus:ring-primary peer-focus:transition-none data-[disabled=true]:cursor-not-allowed data-[disabled=true]:hover:bg-transparent "
+          className="flex aspect-video cursor-pointer flex-col items-center justify-center gap-2 rounded-md border border-dashed text-sm text-muted-foreground duration-300 hover:bg-primary/5 peer-focus:ring-1 peer-focus:ring-primary peer-focus:transition-none data-[disabled=true]:cursor-not-allowed data-[disabled=true]:hover:bg-transparent"
           data-disabled={status !== 'waiting'}
           title="Selecione ou arraste e solte um arquivo"
           onDragOver={handleDragOverFile}
@@ -195,15 +195,15 @@ export const TranscriptionForm = () => {
               </button>
             </div>
           ) : (
-            <>
+            <div className="flex flex-col items-center gap-2 p-5">
               <Upload className="size-8" />
               <span className="w-52 text-center">
                 Selecione ou arraste e solte um arquivo
               </span>
-              <span className="text-xs italic text-slate-700">
+              <span className="text-center text-xs italic text-slate-700">
                 Tipos de arquivos suportados: .mp4, .mkv, .mp3
               </span>
-            </>
+            </div>
           )}
         </label>
       </div>
