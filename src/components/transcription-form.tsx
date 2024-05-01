@@ -29,7 +29,7 @@ export const TranscriptionForm = () => {
   const [temperature, setTemperature] = useState(0);
   const [status, setStatus] = useState<IStatus>('waiting');
 
-  const { setTranscription } = useTranscription();
+  const { setTranscription, setIsLoading } = useTranscription();
 
   const promptInputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -102,9 +102,8 @@ export const TranscriptionForm = () => {
     }
 
     try {
-      setTranscription('');
-
       setStatus('converting');
+      setIsLoading(true);
 
       const audioFile = await convertFile(file);
 
@@ -119,21 +118,24 @@ export const TranscriptionForm = () => {
       const transcription = await transcribe(formData);
 
       if (transcription) {
-        setTranscription(transcription.text);
+        setTranscription((prev) => {
+          return !prev ? transcription.text : prev.concat(' ', transcription.text);
+        });
 
         setFile(undefined);
         promptInputRef.current!.value = '';
 
         setStatus('success');
-        setTimeout(() => setStatus('waiting'), 4000);
       }
     } catch (error) {
       setStatus('error');
-      setTimeout(() => setStatus('waiting'), 4000);
 
       if (error instanceof Error) {
         toast.error(error.message);
       }
+    } finally {
+      setTimeout(() => setStatus('waiting'), 4000);
+      setIsLoading(false);
     }
   };
 
@@ -268,7 +270,7 @@ export const TranscriptionForm = () => {
         data-error={status === 'error'}
         disabled={status !== 'waiting'}
         className={
-          'w-full focus-visible:ring-foreground disabled:pointer-events-none disabled:bg-primary/90 data-[error=true]:bg-red-600 data-[success=true]:bg-green-600'
+          'w-full focus-visible:ring-foreground disabled:pointer-events-none data-[error=true]:bg-red-600 data-[success=true]:bg-green-600'
         }
       >
         {status === 'waiting' ? (

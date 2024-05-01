@@ -1,10 +1,14 @@
 'use client';
 
-import { ReactNode, createContext, useState } from 'react';
+import { Dispatch, ReactNode, SetStateAction, createContext, useState } from 'react';
 
 export interface TranscriptionContextProps {
-  transcription: string | undefined;
-  setTranscription: (user: string) => void;
+  transcription: string;
+  recognition: string;
+  isLoading: boolean;
+  setTranscription: Dispatch<SetStateAction<string>>;
+  setRecognition: Dispatch<SetStateAction<string>>;
+  setIsLoading: Dispatch<SetStateAction<boolean>>;
 }
 
 export const TranscriptionContext = createContext<TranscriptionContextProps>(
@@ -12,13 +16,20 @@ export const TranscriptionContext = createContext<TranscriptionContextProps>(
 );
 
 export const TranscriptionProvider = ({ children }: { children: ReactNode }) => {
-  const [transcription, setTranscription] = useState<string | undefined>();
+  const [transcription, setTranscription] = useState('');
+  const [recognition, setRecognition] = useState('');
+
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
     <TranscriptionContext.Provider
       value={{
         transcription,
+        recognition,
+        isLoading,
         setTranscription,
+        setRecognition,
+        setIsLoading,
       }}
     >
       {children}

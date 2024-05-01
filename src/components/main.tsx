@@ -1,11 +1,12 @@
 'use client';
 
 import { useTranscription } from '@/hooks/use-transcription';
+import { SpeechTranscrition } from './speech-transcription';
 import { TranscriptionForm } from './transcription-form';
 import { Textarea } from './ui/textarea';
 
 export const Main = () => {
-  const { transcription, setTranscription } = useTranscription();
+  const { transcription, recognition, isLoading, setTranscription } = useTranscription();
 
   return (
     <main
@@ -13,14 +14,23 @@ export const Main = () => {
       onDragOver={(e) => e.preventDefault()}
       onDrop={(e) => e.preventDefault()}
     >
-      <Textarea
-        id="transcription"
-        placeholder="Transcrição gerada pela AI..."
-        readOnly={!transcription}
-        className="flex flex-1 resize-none flex-col gap-4 p-5 text-base leading-relaxed tracking-wider antialiased"
-        onChange={(e) => setTranscription(e.target.value)}
-        value={transcription}
-      />
+      <div className="relative flex size-full">
+        <Textarea
+          id="transcription"
+          placeholder="Transcrição gerada pela AI..."
+          readOnly={isLoading}
+          className="relative flex flex-1 resize-none flex-col gap-4 p-5 text-base leading-relaxed tracking-wider antialiased"
+          onChange={(e) => setTranscription(e.target.value)}
+          value={
+            recognition && !transcription
+              ? recognition
+              : recognition && transcription
+                ? transcription.concat(' ', recognition)
+                : transcription
+          }
+        />
+        <SpeechTranscrition />
+      </div>
 
       <aside className="w-96">
         <TranscriptionForm />
