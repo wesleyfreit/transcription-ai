@@ -1,8 +1,8 @@
 'use client';
 
-import { transcribe } from '@/actions/transcribe';
 import { useTranscription } from '@/hooks/use-transcription';
 import { convertFile } from '@/utils/convertFile';
+import axios from 'axios';
 import { CheckCircle, Music, Upload, Wand2, X, XCircle } from 'lucide-react';
 import { ChangeEvent, DragEvent, MouseEvent, useMemo, useRef, useState } from 'react';
 import { toast } from 'sonner';
@@ -115,11 +115,23 @@ export const TranscriptionForm = () => {
       formData.append('prompt', prompt);
       formData.append('temperature', temperature.toString());
 
-      const transcription = await transcribe(formData);
+      const pathname = window?.location.href.toString();
+
+      const transcription = await axios.post<{ text: string }>(
+        pathname.concat('/api/ai/transcribe'),
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        },
+      );
 
       if (transcription) {
         setTranscription((prev) => {
-          return !prev ? transcription.text : prev.concat(' ', transcription.text);
+          return !prev
+            ? transcription.data.text
+            : prev.concat(' ', transcription.data.text);
         });
 
         setFile(undefined);

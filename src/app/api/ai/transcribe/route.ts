@@ -1,6 +1,4 @@
-'use server';
-
-import OpenAI from 'openai';
+import { OpenAI } from 'openai';
 import { zfd } from 'zod-form-data';
 
 const openai = new OpenAI({ apiKey: process.env.AI_KEY });
@@ -11,8 +9,11 @@ const transcriptionSchema = zfd.formData({
   temperature: zfd.numeric(),
 });
 
-export const transcribe = async (formData: FormData) => {
-  const { file, prompt, temperature } = transcriptionSchema.parse(formData);
+export async function POST(request: Request) {
+  console.log('POST /api/ai/transcribe');
+  const { file, prompt, temperature } = transcriptionSchema.parse(
+    await request.formData(),
+  );
 
   const transcription = await openai.audio.transcriptions.create({
     file: file,
@@ -23,5 +24,5 @@ export const transcribe = async (formData: FormData) => {
     prompt,
   });
 
-  return transcription;
-};
+  return Response.json({ text: transcription.text });
+}
