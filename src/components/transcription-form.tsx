@@ -120,11 +120,7 @@ export const TranscriptionForm = () => {
 
       const presignerUrl = await getSignedUrl(audioFile.name, audioFile.type);
 
-      await axios.put(presignerUrl.url, audioFile, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      await axios.put(presignerUrl.url, audioFile);
 
       setStatus('generating');
 
