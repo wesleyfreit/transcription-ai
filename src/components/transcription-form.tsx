@@ -1,5 +1,7 @@
 'use client';
 
+import { getSignedUrl } from '@/actions/signer-url';
+import { transcribe } from '@/actions/transcribe';
 import { useTranscription } from '@/hooks/use-transcription';
 import { convertFile } from '@/utils/convertFile';
 import axios from 'axios';
@@ -14,11 +16,18 @@ import { Slider } from './ui/slider';
 import { Spinner } from './ui/spinner';
 import { Textarea } from './ui/textarea';
 
-type IStatus = 'waiting' | 'converting' | 'generating' | 'success' | 'error';
+type IStatus =
+  | 'waiting'
+  | 'converting'
+  | 'uploading'
+  | 'generating'
+  | 'success'
+  | 'error';
 
 export const formStatusMessages = {
   waiting: 'Executar transcrição',
   converting: 'Convertendo arquivo...',
+  uploading: 'Enviando arquivo...',
   generating: 'Transcrevendo áudio...',
   success: 'Sucesso!',
   error: 'Ocorreu um erro, tente novamente.',
@@ -107,31 +116,23 @@ export const TranscriptionForm = () => {
 
       const audioFile = await convertFile(file);
 
+      setStatus('uploading');
+
+      const presignerUrl = await getSignedUrl(audioFile.name, audioFile.type);
+
+      await axios.put(presignerUrl.url, audioFile, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
       setStatus('generating');
 
-      const formData = new FormData();
-
-      formData.set('file', audioFile);
-      formData.append('prompt', prompt);
-      formData.append('temperature', temperature.toString());
-
-      const pathname = window?.location.href.toString();
-
-      const transcription = await axios.post<{ text: string }>(
-        pathname.concat('/api/ai/transcribe'),
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        },
-      );
+      const transcription = await transcribe(presignerUrl.fileId, prompt, temperature);
 
       if (transcription) {
         setTranscription((prev) => {
-          return !prev
-            ? transcription.data.text
-            : prev.concat(' ', transcription.data.text);
+          return !prev ? transcription.text : prev.concat(' ', transcription.text);
         });
 
         setFile(undefined);

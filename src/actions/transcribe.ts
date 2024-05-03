@@ -1,27 +1,26 @@
 'use server';
 
+import { env } from '@/env';
+import { deleteObject, getObject } from '@/libs/cloudflare';
+import { createReadStream } from 'fs';
 import OpenAI from 'openai';
-import { zfd } from 'zod-form-data';
 
-const openai = new OpenAI({ apiKey: process.env.AI_KEY });
+const openai = new OpenAI({ apiKey: env.AI_KEY });
 
-const transcriptionSchema = zfd.formData({
-  file: zfd.file(),
-  prompt: zfd.text(),
-  temperature: zfd.numeric(),
-});
-
-export const transcribe = async (formData: FormData) => {
-  const { file, prompt, temperature } = transcriptionSchema.parse(formData);
+export const transcribe = async (fileId: string, prompt: string, temperature: number) => {
+  const filePath = await getObject(fileId);
+  const audioReadStream = createReadStream(filePath);
 
   const transcription = await openai.audio.transcriptions.create({
-    file: file,
+    file: audioReadStream,
     model: 'whisper-1',
     language: 'pt',
     response_format: 'json',
     temperature,
     prompt,
   });
+
+  await deleteObject(fileId);
 
   return transcription;
 };
