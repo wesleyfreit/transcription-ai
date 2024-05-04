@@ -18,7 +18,7 @@ export const splitFile = async (file: File) => {
     '-f',
     'segment',
     '-segment_time',
-    '180',
+    '150',
     '-g',
     '9',
     '-sc_threshold',
