@@ -112,21 +112,23 @@ export const TranscriptionForm = () => {
 
       setStatus('generating');
 
-      splitAudioFiles.map(async (file) => {
-        const formData = new FormData();
+      await Promise.all(
+        splitAudioFiles.map(async (file) => {
+          const formData = new FormData();
 
-        formData.append('file', file);
-        formData.append('prompt', prompt);
-        formData.append('temperature', temperature.toString());
+          formData.append('file', file);
+          formData.append('prompt', prompt);
+          formData.append('temperature', temperature.toString());
 
-        const transcription = await transcribe(formData);
+          const transcription = await transcribe(formData);
 
-        if (transcription) {
-          setTranscription((prev) => {
-            return !prev ? transcription.text : prev.concat(' ', transcription.text);
-          });
-        }
-      });
+          if (transcription) {
+            setTranscription((prev) => {
+              return !prev ? transcription.text : prev.concat(' ', transcription.text);
+            });
+          }
+        }),
+      );
 
       setFile(undefined);
       promptInputRef.current!.value = '';
