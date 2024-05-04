@@ -77,14 +77,18 @@ export const SpeechTranscrition = () => {
   };
 
   return (
-    <Button
-      size="icon"
-      onClick={!isRecording ? handleStartRecording : handleStopRecording}
-      title={!isRecording ? 'Gravar e transcrever áudio' : 'Parar gravação e transcrição'}
-      className="absolute bottom-0 right-0 mb-3 mr-3 size-10 rounded-full text-foreground focus-visible:ring-foreground data-[recording=true]:bg-red-600 data-[recording=true]:hover:bg-red-600/90"
-      data-recording={isRecording}
-    >
-      {!isRecording ? <Mic /> : <MicOff />}
-    </Button>
+    <div className="absolute bottom-0 right-0 mb-3 mr-3 size-10 rounded-full bg-background">
+      <Button
+        size="icon"
+        onClick={!isRecording ? handleStartRecording : handleStopRecording}
+        title={
+          !isRecording ? 'Gravar e transcrever áudio' : 'Parar gravação e transcrição'
+        }
+        className="rounded-full text-foreground focus-visible:ring-foreground data-[recording=true]:bg-red-600 data-[recording=true]:hover:bg-red-700/90"
+        data-recording={isRecording}
+      >
+        {!isRecording ? <Mic /> : <MicOff />}
+      </Button>
+    </div>
   );
 };
