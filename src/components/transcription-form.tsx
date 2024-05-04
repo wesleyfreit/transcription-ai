@@ -1,8 +1,9 @@
 'use client';
 
+import { transcribe } from '@/actions/transcribe';
 import { useTranscription } from '@/hooks/use-transcription';
-import { convertFile } from '@/utils/convertFile';
-import axios from 'axios';
+import { convertFile } from '@/utils/convert-file';
+import { splitFile } from '@/utils/split-file';
 import { CheckCircle, Music, Upload, Wand2, X, XCircle } from 'lucide-react';
 import { ChangeEvent, DragEvent, MouseEvent, useMemo, useRef, useState } from 'react';
 import { toast } from 'sonner';
@@ -14,18 +15,11 @@ import { Slider } from './ui/slider';
 import { Spinner } from './ui/spinner';
 import { Textarea } from './ui/textarea';
 
-type IStatus =
-  | 'waiting'
-  | 'converting'
-  | 'uploading'
-  | 'generating'
-  | 'success'
-  | 'error';
+type IStatus = 'waiting' | 'converting' | 'generating' | 'success' | 'error';
 
 export const formStatusMessages = {
   waiting: 'Executar transcrição',
   converting: 'Convertendo arquivo...',
-  uploading: 'Carregando arquivo...',
   generating: 'Transcrevendo áudio...',
   success: 'Sucesso!',
   error: 'Ocorreu um erro, tente novamente.',
@@ -114,45 +108,30 @@ export const TranscriptionForm = () => {
 
       const audioFile = await convertFile(file);
 
-      setStatus('uploading');
-
-      const presignerUrl = await axios.post<{ fileId: string; url: string }>(
-        '/api/make/upload',
-        {
-          filename: file.name,
-          contentType: file.type,
-        },
-      );
-
-      await axios.put(presignerUrl.data.url, audioFile);
+      const splitAudioFiles = await splitFile(audioFile);
 
       setStatus('generating');
 
-      const pathname = window?.location.href.toString();
+      splitAudioFiles.map(async (file) => {
+        const formData = new FormData();
 
-      const transcription = await axios.post<{ text: string }>(
-        pathname.concat('/api/ai/transcribe'),
-        {
-          fileId: presignerUrl.data.fileId,
-          prompt,
-          temperature,
-        },
-      );
+        formData.append('file', file);
+        formData.append('prompt', prompt);
+        formData.append('temperature', temperature.toString());
 
-      // const transcription = await transcribe(presignerUrl.fileId, prompt, temperature);
+        const transcription = await transcribe(formData);
 
-      if (transcription) {
-        setTranscription((prev) => {
-          return !prev
-            ? transcription.data.text
-            : prev.concat(' ', transcription.data.text);
-        });
+        if (transcription) {
+          setTranscription((prev) => {
+            return !prev ? transcription.text : prev.concat(' ', transcription.text);
+          });
+        }
+      });
 
-        setFile(undefined);
-        promptInputRef.current!.value = '';
+      setFile(undefined);
+      promptInputRef.current!.value = '';
 
-        setStatus('success');
-      }
+      setStatus('success');
     } catch (error) {
       setStatus('error');
 
