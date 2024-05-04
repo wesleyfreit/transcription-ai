@@ -1,7 +1,5 @@
 'use client';
 
-import { getSignedUrl } from '@/actions/signer-url';
-import { transcribe } from '@/actions/transcribe';
 import { useTranscription } from '@/hooks/use-transcription';
 import { convertFile } from '@/utils/convertFile';
 import axios from 'axios';
@@ -27,7 +25,7 @@ type IStatus =
 export const formStatusMessages = {
   waiting: 'Executar transcrição',
   converting: 'Convertendo arquivo...',
-  uploading: 'Enviando arquivo...',
+  uploading: 'Carregando arquivo...',
   generating: 'Transcrevendo áudio...',
   success: 'Sucesso!',
   error: 'Ocorreu um erro, tente novamente.',
@@ -118,17 +116,36 @@ export const TranscriptionForm = () => {
 
       setStatus('uploading');
 
-      const presignerUrl = await getSignedUrl(audioFile.name, audioFile.type);
+      const presignerUrl = await axios.post<{ fileId: string; url: string }>(
+        '/api/make/upload',
+        {
+          filename: file.name,
+          contentType: file.type,
+        },
+      );
 
-      await axios.put(presignerUrl.url, audioFile);
+      await axios.put(presignerUrl.data.url, audioFile);
 
       setStatus('generating');
 
-      const transcription = await transcribe(presignerUrl.fileId, prompt, temperature);
+      const pathname = window?.location.href.toString();
+
+      const transcription = await axios.post<{ text: string }>(
+        pathname.concat('/api/ai/transcribe'),
+        {
+          fileId: presignerUrl.data.fileId,
+          prompt,
+          temperature,
+        },
+      );
+
+      // const transcription = await transcribe(presignerUrl.fileId, prompt, temperature);
 
       if (transcription) {
         setTranscription((prev) => {
-          return !prev ? transcription.text : prev.concat(' ', transcription.text);
+          return !prev
+            ? transcription.data.text
+            : prev.concat(' ', transcription.data.text);
         });
 
         setFile(undefined);
