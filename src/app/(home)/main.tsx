@@ -1,10 +1,10 @@
 'use client';
 
 import { useTranscription } from '@/hooks/use-transcription';
+import { Separator } from '../../components/separator';
+import { Textarea } from '../../components/textarea';
 import { SpeechTranscrition } from './speech-transcription';
 import { TranscriptionForm } from './transcription-form';
-import { Separator } from './ui/separator';
-import { Textarea } from './ui/textarea';
 
 export const Main = () => {
   const { transcription, recognition, isLoading, setTranscription } = useTranscription();

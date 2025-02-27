@@ -1,9 +1,10 @@
 'use client';
 
-import { Dispatch, ReactNode, SetStateAction, createContext, useState } from 'react';
+import type { Dispatch, ReactNode, SetStateAction } from 'react';
+import { createContext, useState } from 'react';
 
 export interface TranscriptionContextProps {
-  transcription: string;
+  transcription: string | null | undefined;
   recognition: string;
   isLoading: boolean;
   setTranscription: Dispatch<SetStateAction<string>>;

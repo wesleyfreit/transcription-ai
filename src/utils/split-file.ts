@@ -42,7 +42,7 @@ export const splitFile = async (file: File) => {
       });
 
       splitAudioFiles.push(audioFile);
-    } catch (error) {
+    } catch {
       break;
     }
   }

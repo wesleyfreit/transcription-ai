@@ -16,7 +16,7 @@ export async function getFFmpeg(): Promise<FFmpeg> {
         coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
         wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
       });
-    } catch (error) {
+    } catch {
       alert(
         'Ocorreu um erro, tente recarregar a página, e se o erro persistir tente novamente mais tarde.',
       );

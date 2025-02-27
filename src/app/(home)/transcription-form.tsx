@@ -5,15 +5,16 @@ import { useTranscription } from '@/hooks/use-transcription';
 import { convertFile } from '@/utils/convert-file';
 import { splitFile } from '@/utils/split-file';
 import { CheckCircle, Music, Upload, Wand2, X, XCircle } from 'lucide-react';
-import { ChangeEvent, DragEvent, MouseEvent, useMemo, useRef, useState } from 'react';
+import type { ChangeEvent, DragEvent, MouseEvent } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { toast } from 'sonner';
-import { Button } from './ui/button';
-import { Label } from './ui/label';
-import { Select, SelectTrigger, SelectValue } from './ui/select';
-import { Separator } from './ui/separator';
-import { Slider } from './ui/slider';
-import { Spinner } from './ui/spinner';
-import { Textarea } from './ui/textarea';
+import { Button } from '../../components/button';
+import { Label } from '../../components/label';
+import { Select, SelectTrigger, SelectValue } from '../../components/select';
+import { Separator } from '../../components/separator';
+import { Slider } from '../../components/slider';
+import { Spinner } from '../../components/spinner';
+import { Textarea } from '../../components/textarea';
 
 type IStatus = 'waiting' | 'converting' | 'generating' | 'success' | 'error';
 
@@ -120,12 +121,12 @@ export const TranscriptionForm = () => {
           formData.append('prompt', prompt);
           formData.append('temperature', temperature.toString());
 
-          const transcription = await transcribe(formData);
+          const { text: transcription } = await transcribe(formData);
 
           if (transcription) {
-            setTranscription((prev) => {
-              return !prev ? transcription.text : prev.concat(' ', transcription.text);
-            });
+            setTranscription((prev) =>
+              !prev ? transcription || '' : prev.concat(' ', transcription),
+            );
           }
         }),
       );

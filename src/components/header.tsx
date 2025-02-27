@@ -1,8 +1,7 @@
 'use client';
 
+import { Button } from '@/components/button';
 import { Linkedin } from 'lucide-react';
-
-import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
 export const Header = () => {
