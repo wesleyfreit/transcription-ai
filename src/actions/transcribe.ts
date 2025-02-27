@@ -1,9 +1,11 @@
 'use server';
 
-import OpenAI from 'openai';
+import { AssemblyAI } from 'assemblyai';
 import { zfd } from 'zod-form-data';
 
-const openai = new OpenAI({ apiKey: process.env.AI_KEY });
+const assemblyai = new AssemblyAI({
+  apiKey: process.env.API_KEY as string,
+});
 
 const transcriptionSchema = zfd.formData({
   file: zfd.file(),
@@ -12,15 +14,11 @@ const transcriptionSchema = zfd.formData({
 });
 
 export const transcribe = async (formData: FormData) => {
-  const { file, prompt, temperature } = transcriptionSchema.parse(formData);
+  const { file } = transcriptionSchema.parse(formData);
 
-  const transcription = await openai.audio.transcriptions.create({
-    file: file,
-    model: 'whisper-1',
-    language: 'pt',
-    response_format: 'json',
-    temperature,
-    prompt,
+  const transcription = await assemblyai.transcripts.transcribe({
+    audio: file,
+    language_code: 'pt',
   });
 
   return transcription;
