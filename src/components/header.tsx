@@ -1,7 +1,9 @@
 'use client';
 
+import Logo from '@/assets/logo.svg';
 import { Button } from '@/components/button';
 import { Linkedin } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 
 export const Header = () => {
@@ -11,7 +13,11 @@ export const Header = () => {
       onDragOver={(e) => e.preventDefault()}
       onDrop={(e) => e.preventDefault()}
     >
-      <h1 className="text-xl font-bold">TranscriptionAi</h1>
+      <div className="flex items-center justify-center gap-2">
+        <Image src={Logo} alt="" height={40} width={40} />
+        <h1 className="text-xl font-bold">TranscriptionAi</h1>
+      </div>
+
       <Button
         variant="ghost"
         className="bg-blue-900 hover:bg-blue-900/80 focus-visible:ring-foreground"

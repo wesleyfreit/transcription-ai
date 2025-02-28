@@ -10,7 +10,13 @@ import { useMemo, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { Button } from '../../components/button';
 import { Label } from '../../components/label';
-import { Select, SelectTrigger, SelectValue } from '../../components/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../../components/select';
 import { Separator } from '../../components/separator';
 import { Slider } from '../../components/slider';
 import { Spinner } from '../../components/spinner';
@@ -91,15 +97,8 @@ export const TranscriptionForm = () => {
 
     const prompt = promptInputRef.current?.value;
 
-    if (!file || !prompt) {
-      if (!file) {
-        toast.error('Selecione um arquivo para transcrever.');
-      }
-
-      if (!prompt) {
-        toast.error('Informe palavras chave para transcrição.');
-      }
-
+    if (!file) {
+      toast.error('Selecione um arquivo para transcrever.');
       return;
     }
 
@@ -118,8 +117,12 @@ export const TranscriptionForm = () => {
           const formData = new FormData();
 
           formData.append('file', file);
-          formData.append('prompt', prompt);
+          formData.append('model', 'assembly-ai');
           formData.append('temperature', temperature.toString());
+
+          if (prompt) {
+            formData.append('prompt', prompt);
+          }
 
           const { text: transcription } = await transcribe(formData);
 
@@ -233,10 +236,20 @@ export const TranscriptionForm = () => {
       <div className="space-y-2">
         <Label htmlFor="model">Modelo</Label>
 
-        <Select name="model-select" defaultValue="whispper-1" disabled>
+        <Select
+          name="model-select"
+          defaultValue="assembly-ai"
+          disabled={status !== 'waiting'}
+        >
           <SelectTrigger id="model">
-            <SelectValue>Whisper-1</SelectValue>
+            <SelectValue>AssemblyAI Speech to Text</SelectValue>
           </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="assembly-ai">AssemblyAI Speech to Text</SelectItem>
+            <SelectItem value="whisper-1" disabled>
+              GPT Whisper-1
+            </SelectItem>
+          </SelectContent>
         </Select>
 
         <span className="block text-xs italic text-slate-700">
