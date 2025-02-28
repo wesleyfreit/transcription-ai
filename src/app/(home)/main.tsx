@@ -1,8 +1,8 @@
 'use client';
 
 import { useTranscription } from '@/hooks/use-transcription';
-import { Separator } from '../../components/separator';
-import { Textarea } from '../../components/textarea';
+import { Separator } from '@/components/ui/separator';
+import { Textarea } from '@/components/ui/textarea';
 import { SpeechTranscrition } from './speech-transcription';
 import { TranscriptionForm } from './transcription-form';
 

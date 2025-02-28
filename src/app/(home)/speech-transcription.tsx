@@ -4,7 +4,7 @@ import { useTranscription } from '@/hooks/use-transcription';
 import { Mic, MicOff } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { Button } from '../../components/button';
+import { Button } from '@/components/ui/button';
 
 let speechRecognition: SpeechRecognition | null = null;
 

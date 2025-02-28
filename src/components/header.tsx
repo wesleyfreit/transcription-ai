@@ -1,7 +1,7 @@
 'use client';
 
 import Logo from '@/assets/logo.svg';
-import { Button } from '@/components/button';
+import { Button } from './ui/button';
 import { Linkedin } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -24,7 +24,7 @@ export const Header = () => {
         asChild
       >
         <Link href="https://www.linkedin.com/in/wesleyfreit/">
-          <Linkedin className="mr-2 size-4" />
+          <Linkedin className="size-4" />
           LinkedIn
         </Link>
       </Button>

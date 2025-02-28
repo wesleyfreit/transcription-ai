@@ -9,7 +9,7 @@ export async function getFFmpeg(): Promise<FFmpeg> {
   ffmpeg = new FFmpeg();
 
   if (!ffmpeg.loaded) {
-    const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd';
+    const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.10/dist/umd';
 
     try {
       await ffmpeg.load({

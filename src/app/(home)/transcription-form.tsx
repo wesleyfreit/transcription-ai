@@ -1,6 +1,19 @@
 'use client';
 
 import { transcribe } from '@/actions/transcribe';
+import { Spinner } from '@/components/spinner';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Separator } from '@/components/ui/separator';
+import { Slider } from '@/components/ui/slider';
+import { Textarea } from '@/components/ui/textarea';
 import { useTranscription } from '@/hooks/use-transcription';
 import { convertFile } from '@/utils/convert-file';
 import { splitFile } from '@/utils/split-file';
@@ -8,19 +21,6 @@ import { CheckCircle, Music, Upload, Wand2, X, XCircle } from 'lucide-react';
 import type { ChangeEvent, DragEvent, MouseEvent } from 'react';
 import { useMemo, useRef, useState } from 'react';
 import { toast } from 'sonner';
-import { Button } from '../../components/button';
-import { Label } from '../../components/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '../../components/select';
-import { Separator } from '../../components/separator';
-import { Slider } from '../../components/slider';
-import { Spinner } from '../../components/spinner';
-import { Textarea } from '../../components/textarea';
 
 type IStatus = 'waiting' | 'converting' | 'generating' | 'success' | 'error';
 
@@ -151,7 +151,7 @@ export const TranscriptionForm = () => {
   };
 
   return (
-    <form className="mb-5 space-y-4">
+    <form className="mb-5 space-y-5">
       <div>
         <input
           type="file"
@@ -258,7 +258,7 @@ export const TranscriptionForm = () => {
       </div>
 
       <div className="space-y-4">
-        <Label className="space-y-4">
+        <Label className="space-y-4 flex flex-col items-start">
           <span>Temperatura</span>
 
           <Slider
@@ -286,28 +286,27 @@ export const TranscriptionForm = () => {
 
       <Button
         type="submit"
+        variant="default"
         onClick={handleSubmit}
         data-success={status === 'success'}
         data-error={status === 'error'}
         disabled={status !== 'waiting'}
-        className={
-          'w-full focus-visible:ring-foreground disabled:pointer-events-none data-[error=true]:bg-red-600 data-[success=true]:bg-green-600'
-        }
+        className="w-full focus-visible:ring-foreground disabled:pointer-events-none data-[error=true]:bg-red-600 data-[success=true]:bg-green-600 cursor-pointer"
       >
         {status === 'waiting' ? (
           <>
             {formStatusMessages.waiting}
-            <Wand2 className="ml-2 size-4" />
+            <Wand2 className="size-4" />
           </>
         ) : status === 'success' ? (
           <>
             {formStatusMessages.success}
-            <CheckCircle className="ml-2 size-4" />
+            <CheckCircle className="size-4" />
           </>
         ) : status === 'error' ? (
           <>
             {formStatusMessages.error}
-            <XCircle className="ml-2 size-4" />
+            <XCircle className="size-4" />
           </>
         ) : (
           <>

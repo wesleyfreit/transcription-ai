@@ -1,4 +1,4 @@
-import { getFFmpeg } from '@/libs/ffmpeg';
+import { getFFmpeg } from '@/lib/ffmpeg';
 import { fetchFile } from '@ffmpeg/util';
 
 export const splitFile = async (file: File) => {

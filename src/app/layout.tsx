@@ -1,5 +1,6 @@
 import { TranscriptionProvider } from '@/contexts/transcription';
-import { cn } from '@/libs/utils';
+import { cn } from '@/lib/utils';
+import { ThemeProvider } from '@/providers/theme-provider';
 import type { Metadata } from 'next';
 import { Inter as FontSans } from 'next/font/google';
 import type { ReactNode } from 'react';
@@ -22,23 +23,26 @@ export default function RootLayout({
   children: ReactNode;
 }>) {
   return (
-    <html lang="pt-BR">
-      <TranscriptionProvider>
-        <body className={cn(fontSans.variable)} suppressHydrationWarning>
-          <Toaster
-            richColors
-            expand
-            closeButton
-            theme="dark"
-            toastOptions={{
-              style: {
-                willChange: 'unset',
-              },
-            }}
-          />
-          {children}
-        </body>
-      </TranscriptionProvider>
+    <html lang="pt-BR" suppressHydrationWarning>
+      <body className={cn(fontSans.variable)}>
+        <ThemeProvider>
+          <TranscriptionProvider>
+            <Toaster
+              richColors
+              expand
+              closeButton
+              theme="dark"
+              toastOptions={{
+                style: {
+                  willChange: 'unset',
+                },
+              }}
+            />
+
+            {children}
+          </TranscriptionProvider>
+        </ThemeProvider>
+      </body>
     </html>
   );
 }
