@@ -211,8 +211,13 @@ export const TranscriptionForm = () => {
               <span className="w-52 text-center">
                 Selecione ou arraste e solte um arquivo
               </span>
+
               <span className="text-center text-xs italic text-slate-700">
                 Tipos de arquivos suportados: .mp4, .mkv, .mp3
+              </span>
+
+              <span className="text-center text-xs italic text-slate-700">
+                Idiomas suportados: Português
               </span>
             </div>
           )}
@@ -231,6 +236,10 @@ export const TranscriptionForm = () => {
           placeholder="Inclua palavras chave mencionadas no vídeo separadas por vírgula (,)"
           disabled={status !== 'waiting'}
         />
+
+        <span className="block text-xs italic leading-relaxed text-slate-700">
+          (O modelo AssemblyAI não utiliza prompt para gerar resultados).
+        </span>
       </div>
 
       <div className="space-y-2">
@@ -247,7 +256,7 @@ export const TranscriptionForm = () => {
           <SelectContent>
             <SelectItem value="assembly-ai">AssemblyAI Speech to Text</SelectItem>
             <SelectItem value="whisper-1" disabled>
-              GPT Whisper-1
+              GPT Whisper-1 <span className="italic">(desativado por enquanto)</span>
             </SelectItem>
           </SelectContent>
         </Select>
@@ -278,7 +287,8 @@ export const TranscriptionForm = () => {
 
         <span className="block text-xs italic leading-relaxed text-slate-700">
           Valores mais elevados tender a deixar o resultado mais criativo, mas também mais
-          propenso a erros.
+          propenso a erros. (O modelo AssemblyAI não utiliza temperatura para gerar
+          resultados).
         </span>
       </div>
 
