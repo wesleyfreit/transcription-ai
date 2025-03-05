@@ -18,7 +18,7 @@ export const splitFile = async (file: File) => {
     '-f',
     'segment',
     '-segment_time',
-    '150',
+    '10', // 10 seconds per segment with assembly ai because is more slowly than openai whisper 1
     '-g',
     '9',
     '-sc_threshold',
